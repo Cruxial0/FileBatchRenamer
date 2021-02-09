@@ -1,0 +1,15 @@
+C:\Users\Benjamin\source\repos\FileBatchRenamer\bin\Debug\FileBatchRenamer.exe.config
+C:\Users\Benjamin\source\repos\FileBatchRenamer\bin\Debug\FileBatchRenamer.exe
+C:\Users\Benjamin\source\repos\FileBatchRenamer\bin\Debug\FileBatchRenamer.pdb
+C:\Users\Benjamin\source\repos\FileBatchRenamer\obj\Debug\FileBatchRenamer.csprojAssemblyReference.cache
+C:\Users\Benjamin\source\repos\FileBatchRenamer\obj\Debug\MainWindow.g.cs
+C:\Users\Benjamin\source\repos\FileBatchRenamer\obj\Debug\App.g.cs
+C:\Users\Benjamin\source\repos\FileBatchRenamer\obj\Debug\FileBatchRenamer_MarkupCompile.cache
+C:\Users\Benjamin\source\repos\FileBatchRenamer\obj\Debug\FileBatchRenamer_MarkupCompile.lref
+C:\Users\Benjamin\source\repos\FileBatchRenamer\obj\Debug\MainWindow.baml
+C:\Users\Benjamin\source\repos\FileBatchRenamer\obj\Debug\FileBatchRenamer.g.resources
+C:\Users\Benjamin\source\repos\FileBatchRenamer\obj\Debug\FileBatchRenamer.Properties.Resources.resources
+C:\Users\Benjamin\source\repos\FileBatchRenamer\obj\Debug\FileBatchRenamer.csproj.GenerateResource.cache
+C:\Users\Benjamin\source\repos\FileBatchRenamer\obj\Debug\FileBatchRenamer.csproj.CoreCompileInputs.cache
+C:\Users\Benjamin\source\repos\FileBatchRenamer\obj\Debug\FileBatchRenamer.exe
+C:\Users\Benjamin\source\repos\FileBatchRenamer\obj\Debug\FileBatchRenamer.pdb
