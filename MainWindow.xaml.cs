@@ -1,20 +1,16 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace FileBatchRenamer
 {
@@ -23,11 +19,19 @@ namespace FileBatchRenamer
     /// </summary>
     public partial class MainWindow : Window
     {
+        public static bool enableLogging = true;
+        public static bool AutoScroll = true;
+
         private static List<string> inputFiles = new List<string>();
         private static string outputFolder;
+        public static Stopwatch sw = new Stopwatch();
+
         public MainWindow()
         {
             InitializeComponent();
+
+            Dispatcher.Invoke(DispatcherPriority.Background,
+            new Action(async () => await logElement("INFO", "#fff700", $"Disabling logging can vastly improve results! (Enabled by default)")));
         }
 
         private void btnFindFiles_Click(object sender, RoutedEventArgs e)
@@ -35,14 +39,25 @@ namespace FileBatchRenamer
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Multiselect = true;
 
-            logElement("Button clicked", "#fff700",  $"'Select input files' was clicked.");
+            Dispatcher.Invoke(DispatcherPriority.Background,
+                  new Action(async () => await logElement("Button clicked", "#fff700", $"'Select output folder' was clicked.")));
 
-            if(ofd.ShowDialog() == true && ofd.FileNames.Length > 0)
+            if (ofd.ShowDialog() == true && ofd.FileNames.Length > 1)
             {
                 inputFiles = ofd.FileNames.ToList();
                 btnFindFiles.IsEnabled = false;
 
+                Dispatcher.Invoke(DispatcherPriority.Background,
+                  new Action(async () => await logElement("Update", "#eb85ff", $"{ofd.FileNames.Length} files found.")));
+                
+
                 if (btnFindFiles.IsEnabled == false && btnOutputFolder.IsEnabled == false) btnConvert.IsEnabled = true;
+                return;
+            }
+            else
+            {
+                Dispatcher.Invoke(DispatcherPriority.Background,
+                  new Action(async () => await logElement("Notice", "#ffa412", $"Please select 1 or more picture(s).")));
             }
         }
 
@@ -50,19 +65,167 @@ namespace FileBatchRenamer
         {
             System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
 
-            logElement("Button clicked", "#fff700", $"'Select output folder' was clicked.");
+            Dispatcher.Invoke(DispatcherPriority.Background,
+                  new Action(async () => await logElement("Button clicked", "#fff700", $"'Select output folder' was clicked.")));
 
             if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK && fbd.SelectedPath != null)
             {
                 outputFolder = fbd.SelectedPath;
                 btnOutputFolder.IsEnabled = false;
 
+                Dispatcher.Invoke(DispatcherPriority.Background,
+                 new Action(async () => await logElement("Update", "#eb85ff", $"Output directory set to: '{fbd.SelectedPath}'")));
+
                 if (btnFindFiles.IsEnabled == false && btnOutputFolder.IsEnabled == false) btnConvert.IsEnabled = true;
+                return;
+            }
+            else
+            {
+                Dispatcher.Invoke(DispatcherPriority.Background,
+                  new Action(async () => await logElement("Error!", "#ff4a4a", $"Something went wrong when setting the output folder...")));
             }
         }
 
-        private void logElement(string header, string headerColorHex, string content)
+        private void btnConvert_Click(object sender, RoutedEventArgs e)
         {
+            string stringFormat = txtOutputName.Text;
+            List<Bitmap> outputImages = new List<Bitmap>();
+
+            try
+            {
+                outputImages = new List<Bitmap>();
+                Dispatcher.Invoke(DispatcherPriority.Background,
+                  new Action(async () => await logElement("Button clicked", "#00ddff", $"Temporary list created.")));
+            }
+            catch(Exception ex)
+            {
+                Dispatcher.Invoke(DispatcherPriority.Background,
+                  new Action(async () => await logElement("Error!", "#ff4a4a", $"{ex.Message}\n{ex.StackTrace}")));
+                return;
+            }
+
+            sw.Start();
+            foreach (var path in inputFiles)
+            {
+                Bitmap bmp;
+                try
+                {
+                    bmp = new Bitmap(path);
+                    Dispatcher.Invoke(DispatcherPriority.Background,
+                    new Action(async () => await logElement("Image found", "#00ddff", $"File in '{path}' was found and loaded.")));
+
+                    outputImages.Add(bmp);
+                    Dispatcher.Invoke(DispatcherPriority.Background,
+                    new Action(async () => await logElement("Image saved", "#00ddff", $"Image converted and saved to list. Local Image ID: {outputImages.Count}")));
+
+                }
+                catch (Exception ex)
+                {
+                    Dispatcher.Invoke(DispatcherPriority.Background,
+                    new Action(async () => await logElement("Error!", "#ff4a4a", $"{ex.Message}\n{ex.StackTrace}")));
+                    btnReset.IsEnabled = true;
+                    return;
+                } 
+            }
+
+            string conversionTime = sw.ElapsedMilliseconds.ToString();
+            sw.Stop();
+
+            Dispatcher.Invoke(DispatcherPriority.Background,
+            new Action(async () => await logElement("Task completed", "#59ff38", $"All images found and saved.")));
+            Dispatcher.Invoke(DispatcherPriority.Background,
+            new Action(async () => await logElement("Executing task", "#fff700", $"Saving images to output folder...")));
+
+            if(!Directory.Exists(outputFolder))
+            {
+                Dispatcher.Invoke(DispatcherPriority.Background,
+                new Action(async () => await logElement("Error!", "#ff4a4a", $"Directory at '{outputFolder}' does not exist!")));
+                return;
+            }
+
+            Dispatcher.Invoke(DispatcherPriority.Background,
+            new Action(async () => await logElement("Directory found", "#00ddff", $"Directory at '{outputFolder}' found.")));
+
+            int i = 0;
+
+            sw.Reset();
+            sw.Start();
+
+            foreach (var image in outputImages)
+            {
+                try
+                {
+                    i++;
+                    image.Save(System.IO.Path.Combine(outputFolder, string.Format(stringFormat, i)));
+                    Dispatcher.Invoke(DispatcherPriority.Background,
+                    new Action(async () => await logElement("Image saved", "#00ddff", $"Image '{string.Format(stringFormat, i)}' saved in output folder.")));
+                }
+                catch (Exception ex)
+                {
+                    Dispatcher.Invoke(DispatcherPriority.Background,
+                    new Action(async () => await logElement("Error!", "#ff4a4a", $"{ex.Message}\n{ex.StackTrace}")));
+                    btnReset.IsEnabled = true;
+                    return;
+                }
+            }
+            string elapsedSaved = sw.ElapsedMilliseconds.ToString();
+            sw.Stop();
+
+            Dispatcher.Invoke(DispatcherPriority.Background,
+            new Action(async () => await logElement("Task completed", "#59ff38", $"All images found and saved.")));
+            Dispatcher.Invoke(DispatcherPriority.Background,
+            new Action(async () => await logElement("INFO", "#fff700", $"Time elapsed converting: {conversionTime}ms")));
+            Dispatcher.Invoke(DispatcherPriority.Background,
+            new Action(async () => await logElement("INFO", "#fff700", $"Time elapsed converting: {elapsedSaved}ms")));
+
+            MessageBox.Show($"Task completed!\nConversion time: {conversionTime}ms\nSave time {elapsedSaved}ms");
+
+            btnReset.IsEnabled = true;
+
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
+        }
+
+        private void btnReset_Click(object sender, RoutedEventArgs e)
+        {
+            inputFiles = null;
+            outputFolder = null;
+
+            btnReset.IsEnabled = false;
+            btnConvert.IsEnabled = false;
+            btnFindFiles.IsEnabled = true;
+            btnOutputFolder.IsEnabled = true;
+
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
+        }
+
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            enableLogging = true;
+            ctrlActionLog.IsEnabled = true;
+        }
+
+        private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            enableLogging = false;
+            ctrlActionLog.IsEnabled = false;
+        }
+
+        private void chkAutoScroll_Checked(object sender, RoutedEventArgs e)
+        {
+            AutoScroll = true;
+        }
+
+        private void chkAutoScroll_Unchecked(object sender, RoutedEventArgs e)
+        {
+            AutoScroll = false;
+        }
+
+        private async Task logElement(string header, string headerColorHex, string content)
+        {
+            if (!enableLogging) return;
+
             RichTextBox richTextBox = new RichTextBox();
             richTextBox.Background = null;
             richTextBox.BorderBrush = null;
@@ -90,72 +253,24 @@ namespace FileBatchRenamer
             ctrlActionLog.Children.Add(richTextBox);
         }
 
-        private void btnConvert_Click(object sender, RoutedEventArgs e)
+        private void ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-            string stringFormat = txtOutputName.Text;
-            List<Bitmap> outputImages = new List<Bitmap>();
-
-            try
-            {
-                outputImages = new List<Bitmap>();
-                logElement("Button clicked", "#00ddff", $"Temporary list created.");
-            }
-            catch(Exception ex)
-            {
-                logElement("Error!", "#ff4a4a", $"{ex.Message}\n{ex.StackTrace}");
-                return;
-            }
-
-            foreach (var path in inputFiles)
-            {
-                Bitmap bmp;
-                try
-                {
-                    bmp = new Bitmap(path);
-                    logElement("Image found", "#00ddff", $"File in '{path}' was found and loaded.");
-
-                    outputImages.Add(bmp);
-                    logElement("Image saved", "#00ddff", $"Image converted and saved to list. Local Image ID: {outputImages.Count}");
-
+            if (e.ExtentHeightChange == 0)
+            {   
+                if (scrollViewer.VerticalOffset == scrollViewer.ScrollableHeight)
+                {   
+                    AutoScroll = true;
                 }
-                catch (Exception ex)
-                {
-                    logElement("Error!", "#ff4a4a", $"{ex.Message}\n{ex.StackTrace}");
-                    return;
-                } 
-            }
-
-            logElement("Task completed", "#59ff38", $"All images found and saved.");
-            logElement("Executing task", "#fff700", $"Saving images to output folder...");
-
-            if(!Directory.Exists(outputFolder))
-            {
-                logElement("Error!", "#ff4a4a", $"Directory at '{outputFolder}' does not exist!");
-                return;
-            }
-
-            logElement("Directory found", "#00ddff", $"Directory at '{outputFolder}' found.");
-
-            int i = 0;
-
-            foreach (var image in outputImages)
-            {
-                try
-                {
-                    i++;
-                    image.Save(System.IO.Path.Combine(outputFolder, string.Format(stringFormat, i)));
-                    logElement("Image saved", "#00ddff", $"Image '{string.Format(stringFormat, i)}' saved in output folder.");
-                }
-                catch (Exception ex)
-                {
-                    logElement("Error!", "#ff4a4a", $"{ex.Message}\n{ex.StackTrace}");
-                    return;
+                else
+                {   
+                    AutoScroll = false;
                 }
             }
 
-            logElement("Taks completed", "#59ff38", $"All images found and saved.");
-
-            MessageBox.Show("Task completed!");
+            if (AutoScroll && e.ExtentHeightChange != 0)
+            {   
+                scrollViewer.ScrollToVerticalOffset(scrollViewer.ExtentHeight);
+            }
         }
     }
 }

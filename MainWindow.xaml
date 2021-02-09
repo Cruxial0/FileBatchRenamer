@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FileBatchRenamer"
         mc:Ignorable="d" FontSize="16" FontFamily="Segoe UI Light"
-        Title="MainWindow" Height="423" Width="695.327">
+        ResizeMode="NoResize"
+        Title="Image Sequence Renamer" Height="430" Width="889.327">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="20"/>
@@ -20,21 +21,22 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <Label Content="Hi shitass, use controls below to get started." Grid.Row="1" Grid.Column="1" FontSize="16" Grid.ColumnSpan="3" Margin="0.333,0.333,315,0.333"/>
+        <Label Content="Use controls below to get started." Grid.Row="1" Grid.Column="1" FontSize="16" Grid.ColumnSpan="3" Margin="0.333,0.333,315,0.333"/>
 
         <Button x:Name="btnFindFiles" Content="Select input files." Grid.Column="1" Grid.Row="2" Margin="0.333,9.667,16.931,262" Click="btnFindFiles_Click"/>
 
         <Button x:Name="btnOutputFolder" Content="Select output folder destination." Grid.Column="1" Grid.Row="2" Margin="0.333,41.667,17.667,229" Click="btnOutputFolder_Click"/>
 
-        <Label Content="Action log" Grid.Row="1" Grid.Column="3" />
-        <ScrollViewer Grid.Row="2" Grid.Column="3" Background="#FF707070"
-                    Grid.RowSpan="3" Width="315">
-            <StackPanel x:Name="ctrlActionLog" Orientation="Vertical">
-
-            </StackPanel>
+        <Label Content="Action log" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Margin="63,29,1,274" Grid.RowSpan="2"/>
+        <ScrollViewer x:Name="scrollViewer" ScrollChanged="ScrollViewer_ScrollChanged" Grid.Row="2" Grid.Column="3" Background="#FF707070"
+                    Grid.RowSpan="2" Width="500" Height="300" Margin="0,28,1,-26">
+            <StackPanel x:Name="ctrlActionLog" Orientation="Vertical"/>
         </ScrollViewer>
-        <Label Content="Output" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Margin="8.333,162.667,55,-161.667" Grid.RowSpan="2"/>
+        <Label Content="Output" Grid.Row="2" Grid.Column="1" Margin="8,163,208,109"/>
         <TextBox x:Name="txtOutputName" Text="FileName{0}@2x.png" FontFamily="Calibri" Grid.Row="2" Grid.Column="1" Margin="70.333,168.667,9.667,108.667"/>
-        <Button x:Name="btnConvert" Content="Start conversion" Grid.Column="1" Grid.Row="2" Margin="8.333,202.667,9.667,68" Click="btnConvert_Click"/>
+        <Button x:Name="btnConvert" IsEnabled="False" Content="Start conversion" Grid.Column="1" Grid.Row="2" Margin="10,202.667,9.667,68" Click="btnConvert_Click"/>
+        <Button x:Name="btnReset" IsEnabled="False" Content="Reset" Grid.Column="1" Grid.Row="2" Margin="10,237,8,34" Click="btnReset_Click"/>
+        <CheckBox Content="Enable logging" IsChecked="True" Grid.Column="3" HorizontalAlignment="Left" Margin="364,6,0,2" Grid.Row="1" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"/>
+        <CheckBox x:Name="chkAutoScroll" Content="Enable AutoScroll" IsChecked="True" Grid.Column="3" HorizontalAlignment="Left" Margin="364,32,0,277" Grid.Row="1" Checked="chkAutoScroll_Checked" Unchecked="chkAutoScroll_Unchecked" Grid.RowSpan="2"/>
     </Grid>
 </Window>
