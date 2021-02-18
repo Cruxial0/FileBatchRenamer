@@ -31,7 +31,7 @@ namespace FileBatchRenamer
             InitializeComponent();
 
             Dispatcher.Invoke(DispatcherPriority.Background,
-            new Action(async () => await logElement("INFO", "#fff700", $"Disabling logging can vastly improve results! (Enabled by default)")));
+            new Action(async () => await logElement("INFO", "#fff700", $"Disabling logging can vastly improve performance results! (Enabled by default)")));
         }
 
         private void btnFindFiles_Click(object sender, RoutedEventArgs e)
