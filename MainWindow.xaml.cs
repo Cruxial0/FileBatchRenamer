@@ -31,7 +31,7 @@ namespace FileBatchRenamer
             InitializeComponent();
 
             Dispatcher.Invoke(DispatcherPriority.Background,
-            new Action(async () => await logElement("INFO", "#fff700", $"Disabling logging can vastly improve performance results! (Enabled by default)")));
+            new Action(() =>  logElement("INFO", "#fff700", $"Disabling logging can vastly improve performance results! (Enabled by default)")));
         }
 
         private void btnFindFiles_Click(object sender, RoutedEventArgs e)
@@ -40,7 +40,7 @@ namespace FileBatchRenamer
             ofd.Multiselect = true;
 
             Dispatcher.Invoke(DispatcherPriority.Background,
-                  new Action(async () => await logElement("Button clicked", "#fff700", $"'Select output folder' was clicked.")));
+                  new Action(() =>  logElement("Button clicked", "#fff700", $"'Select output folder' was clicked.")));
 
             if (ofd.ShowDialog() == true && ofd.FileNames.Length > 1)
             {
@@ -48,7 +48,7 @@ namespace FileBatchRenamer
                 btnFindFiles.IsEnabled = false;
 
                 Dispatcher.Invoke(DispatcherPriority.Background,
-                  new Action(async () => await logElement("Update", "#eb85ff", $"{ofd.FileNames.Length} files found.")));
+                  new Action(() =>  logElement("Update", "#eb85ff", $"{ofd.FileNames.Length} files found.")));
                 
 
                 if (btnFindFiles.IsEnabled == false && btnOutputFolder.IsEnabled == false) btnConvert.IsEnabled = true;
@@ -57,7 +57,7 @@ namespace FileBatchRenamer
             else
             {
                 Dispatcher.Invoke(DispatcherPriority.Background,
-                  new Action(async () => await logElement("Notice", "#ffa412", $"Please select 1 or more picture(s).")));
+                  new Action(() =>  logElement("Notice", "#ffa412", $"Please select 1 or more picture(s).")));
             }
         }
 
@@ -66,7 +66,7 @@ namespace FileBatchRenamer
             System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
 
             Dispatcher.Invoke(DispatcherPriority.Background,
-                  new Action(async () => await logElement("Button clicked", "#fff700", $"'Select output folder' was clicked.")));
+                  new Action(() =>  logElement("Button clicked", "#fff700", $"'Select output folder' was clicked.")));
 
             if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK && fbd.SelectedPath != null)
             {
@@ -74,7 +74,7 @@ namespace FileBatchRenamer
                 btnOutputFolder.IsEnabled = false;
 
                 Dispatcher.Invoke(DispatcherPriority.Background,
-                 new Action(async () => await logElement("Update", "#eb85ff", $"Output directory set to: '{fbd.SelectedPath}'")));
+                 new Action(() =>  logElement("Update", "#eb85ff", $"Output directory set to: '{fbd.SelectedPath}'")));
 
                 if (btnFindFiles.IsEnabled == false && btnOutputFolder.IsEnabled == false) btnConvert.IsEnabled = true;
                 return;
@@ -82,7 +82,7 @@ namespace FileBatchRenamer
             else
             {
                 Dispatcher.Invoke(DispatcherPriority.Background,
-                  new Action(async () => await logElement("Error!", "#ff4a4a", $"Something went wrong when setting the output folder...")));
+                  new Action(() =>  logElement("Error!", "#ff4a4a", $"Something went wrong when setting the output folder...")));
             }
         }
 
@@ -95,12 +95,12 @@ namespace FileBatchRenamer
             {
                 outputImages = new List<Bitmap>();
                 Dispatcher.Invoke(DispatcherPriority.Background,
-                  new Action(async () => await logElement("Button clicked", "#00ddff", $"Temporary list created.")));
+                  new Action(() =>  logElement("Button clicked", "#00ddff", $"Temporary list created.")));
             }
             catch(Exception ex)
             {
                 Dispatcher.Invoke(DispatcherPriority.Background,
-                  new Action(async () => await logElement("Error!", "#ff4a4a", $"{ex.Message}\n{ex.StackTrace}")));
+                  new Action(() =>  logElement("Error!", "#ff4a4a", $"{ex.Message}\n{ex.StackTrace}")));
                 return;
             }
 
@@ -112,17 +112,17 @@ namespace FileBatchRenamer
                 {
                     bmp = new Bitmap(path);
                     Dispatcher.Invoke(DispatcherPriority.Background,
-                    new Action(async () => await logElement("Image found", "#00ddff", $"File in '{path}' was found and loaded.")));
+                    new Action(() =>  logElement("Image found", "#00ddff", $"File in '{path}' was found and loaded.")));
 
                     outputImages.Add(bmp);
                     Dispatcher.Invoke(DispatcherPriority.Background,
-                    new Action(async () => await logElement("Image saved", "#00ddff", $"Image converted and saved to list. Local Image ID: {outputImages.Count}")));
+                    new Action(() =>  logElement("Image saved", "#00ddff", $"Image converted and saved to list. Local Image ID: {outputImages.Count}")));
 
                 }
                 catch (Exception ex)
                 {
                     Dispatcher.Invoke(DispatcherPriority.Background,
-                    new Action(async () => await logElement("Error!", "#ff4a4a", $"{ex.Message}\n{ex.StackTrace}")));
+                    new Action(() =>  logElement("Error!", "#ff4a4a", $"{ex.Message}\n{ex.StackTrace}")));
                     btnReset.IsEnabled = true;
                     return;
                 } 
@@ -132,19 +132,19 @@ namespace FileBatchRenamer
             sw.Stop();
 
             Dispatcher.Invoke(DispatcherPriority.Background,
-            new Action(async () => await logElement("Task completed", "#59ff38", $"All images found and saved.")));
+            new Action(() =>  logElement("Task completed", "#59ff38", $"All images found and saved.")));
             Dispatcher.Invoke(DispatcherPriority.Background,
-            new Action(async () => await logElement("Executing task", "#fff700", $"Saving images to output folder...")));
+            new Action(() =>  logElement("Executing task", "#fff700", $"Saving images to output folder...")));
 
             if(!Directory.Exists(outputFolder))
             {
                 Dispatcher.Invoke(DispatcherPriority.Background,
-                new Action(async () => await logElement("Error!", "#ff4a4a", $"Directory at '{outputFolder}' does not exist!")));
+                new Action(() =>  logElement("Error!", "#ff4a4a", $"Directory at '{outputFolder}' does not exist!")));
                 return;
             }
 
             Dispatcher.Invoke(DispatcherPriority.Background,
-            new Action(async () => await logElement("Directory found", "#00ddff", $"Directory at '{outputFolder}' found.")));
+            new Action(() =>  logElement("Directory found", "#00ddff", $"Directory at '{outputFolder}' found.")));
 
             int i = 0;
 
@@ -158,12 +158,12 @@ namespace FileBatchRenamer
                     i++;
                     image.Save(System.IO.Path.Combine(outputFolder, string.Format(stringFormat, i)));
                     Dispatcher.Invoke(DispatcherPriority.Background,
-                    new Action(async () => await logElement("Image saved", "#00ddff", $"Image '{string.Format(stringFormat, i)}' saved in output folder.")));
+                    new Action(() =>  logElement("Image saved", "#00ddff", $"Image '{string.Format(stringFormat, i)}' saved in output folder.")));
                 }
                 catch (Exception ex)
                 {
                     Dispatcher.Invoke(DispatcherPriority.Background,
-                    new Action(async () => await logElement("Error!", "#ff4a4a", $"{ex.Message}\n{ex.StackTrace}")));
+                    new Action(() =>  logElement("Error!", "#ff4a4a", $"{ex.Message}\n{ex.StackTrace}")));
                     btnReset.IsEnabled = true;
                     return;
                 }
@@ -172,11 +172,11 @@ namespace FileBatchRenamer
             sw.Stop();
 
             Dispatcher.Invoke(DispatcherPriority.Background,
-            new Action(async () => await logElement("Task completed", "#59ff38", $"All images found and saved.")));
+            new Action(() => logElement("Task completed", "#59ff38", $"All images found and saved.")));
             Dispatcher.Invoke(DispatcherPriority.Background,
-            new Action(async () => await logElement("INFO", "#fff700", $"Time elapsed converting: {conversionTime}ms")));
+            new Action(() => logElement("INFO", "#fff700", $"Time elapsed converting: {conversionTime}ms")));
             Dispatcher.Invoke(DispatcherPriority.Background,
-            new Action(async () => await logElement("INFO", "#fff700", $"Time elapsed converting: {elapsedSaved}ms")));
+            new Action(() => logElement("INFO", "#fff700", $"Time elapsed converting: {elapsedSaved}ms")));
 
             MessageBox.Show($"Task completed!\nConversion time: {conversionTime}ms\nSave time {elapsedSaved}ms");
 
