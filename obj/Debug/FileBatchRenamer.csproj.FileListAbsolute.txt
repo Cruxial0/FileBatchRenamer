@@ -28,3 +28,10 @@ C:\Users\Colin\RiderProjects\FileBatchRenamerPerformance\obj\Debug\FileBatchRena
 C:\Users\Colin\RiderProjects\FileBatchRenamerPerformance\obj\Debug\FileBatchRenamer.csproj.CoreCompileInputs.cache
 C:\Users\Colin\RiderProjects\FileBatchRenamerPerformance\obj\Debug\FileBatchRenamer.exe
 C:\Users\Colin\RiderProjects\FileBatchRenamerPerformance\obj\Debug\FileBatchRenamer.pdb
+C:\Users\Colin\RiderProjects\FileBatchRenamerPerformance\bin\Debug\Microsoft.WindowsAPICodePack.dll
+C:\Users\Colin\RiderProjects\FileBatchRenamerPerformance\bin\Debug\Microsoft.WindowsAPICodePack.ExtendedLinguisticServices.dll
+C:\Users\Colin\RiderProjects\FileBatchRenamerPerformance\bin\Debug\Microsoft.WindowsAPICodePack.Sensors.dll
+C:\Users\Colin\RiderProjects\FileBatchRenamerPerformance\bin\Debug\Microsoft.WindowsAPICodePack.Shell.dll
+C:\Users\Colin\RiderProjects\FileBatchRenamerPerformance\bin\Debug\Microsoft.WindowsAPICodePack.ShellExtensions.dll
+C:\Users\Colin\RiderProjects\FileBatchRenamerPerformance\obj\Debug\FileBatchRenamer_Content.g.cs
+C:\Users\Colin\RiderProjects\FileBatchRenamerPerformance\obj\Debug\FileBatchRenamer.csproj.CopyComplete

@@ -1,5 +1,4 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -9,8 +8,12 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Media;
 using System.Windows.Threading;
+using Microsoft.WindowsAPICodePack.Dialogs;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
+using RichTextBox = System.Windows.Controls.RichTextBox;
 
 namespace FileBatchRenamer
 {
@@ -30,7 +33,7 @@ namespace FileBatchRenamer
         {
             InitializeComponent();
 
-            Dispatcher.Invoke(DispatcherPriority.Background,
+            Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
             new Action(() =>  logElement("INFO", "#fff700", $"Disabling logging can vastly improve performance results! (Enabled by default)")));
         }
 
@@ -39,7 +42,7 @@ namespace FileBatchRenamer
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Multiselect = true;
 
-            Dispatcher.Invoke(DispatcherPriority.Background,
+            Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
                   new Action(() =>  logElement("Button clicked", "#fff700", $"'Select output folder' was clicked.")));
 
             if (ofd.ShowDialog() == true && ofd.FileNames.Length > 1)
@@ -47,7 +50,7 @@ namespace FileBatchRenamer
                 inputFiles = ofd.FileNames.ToList();
                 btnFindFiles.IsEnabled = false;
 
-                Dispatcher.Invoke(DispatcherPriority.Background,
+                Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
                   new Action(() =>  logElement("Update", "#eb85ff", $"{ofd.FileNames.Length} files found.")));
                 
 
@@ -56,37 +59,105 @@ namespace FileBatchRenamer
             }
             else
             {
-                Dispatcher.Invoke(DispatcherPriority.Background,
+                Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
                   new Action(() =>  logElement("Notice", "#ffa412", $"Please select 1 or more picture(s).")));
             }
         }
 
         private void btnOutputFolder_Click(object sender, RoutedEventArgs e)
         {
+            Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
+                new Action(() =>  logElement("Button clicked", "#fff700", $"'Select output folder' was clicked.")));
+            
+            using(var fbd = new CommonOpenFileDialog())
+            {
+                fbd.IsFolderPicker = true;
+                
+                var result = fbd.ShowDialog();
+
+                if (result == CommonFileDialogResult.Ok && !string.IsNullOrWhiteSpace(fbd.FileName))
+                {
+                    outputFolder = fbd.FileName;
+                    btnOutputFolder.IsEnabled = false;
+                    
+                    Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
+                        new Action(() =>  logElement("Update", "#eb85ff", $"Output directory set to: '{fbd.FileName}'")));
+                    if (btnFindFiles.IsEnabled == false && btnOutputFolder.IsEnabled == false) btnConvert.IsEnabled = true;
+                }
+                else
+                {
+                    Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
+                        new Action(() =>  logElement("Error!", "#ff4a4a", $"Something went wrong when setting the output folder...")));
+                }
+            }
+        }
+
+        private void SelOutFolder_Old()
+        {
             System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
 
-            Dispatcher.Invoke(DispatcherPriority.Background,
-                  new Action(() =>  logElement("Button clicked", "#fff700", $"'Select output folder' was clicked.")));
+            Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
+                new Action(() =>  logElement("Button clicked", "#fff700", $"'Select output folder' was clicked.")));
 
             if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK && fbd.SelectedPath != null)
             {
                 outputFolder = fbd.SelectedPath;
                 btnOutputFolder.IsEnabled = false;
 
-                Dispatcher.Invoke(DispatcherPriority.Background,
-                 new Action(() =>  logElement("Update", "#eb85ff", $"Output directory set to: '{fbd.SelectedPath}'")));
+                Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
+                    new Action(() =>  logElement("Update", "#eb85ff", $"Output directory set to: '{fbd.SelectedPath}'")));
 
                 if (btnFindFiles.IsEnabled == false && btnOutputFolder.IsEnabled == false) btnConvert.IsEnabled = true;
                 return;
             }
             else
             {
-                Dispatcher.Invoke(DispatcherPriority.Background,
-                  new Action(() =>  logElement("Error!", "#ff4a4a", $"Something went wrong when setting the output folder...")));
+                Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
+                    new Action(() =>  logElement("Error!", "#ff4a4a", $"Something went wrong when setting the output folder...")));
             }
         }
-
+        
+        
         private void btnConvert_Click(object sender, RoutedEventArgs e)
+        {
+            string stringFormat = txtOutputName.Text;
+            Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
+                new Action(() => logElement("Button clicked", "#00ddff", "Conversion started")));
+            sw.Start();
+            inputFiles.Sort();
+            //inputFiles.Reverse();
+            
+            if(!Directory.Exists(outputFolder))
+            {
+                Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
+                    new Action(() =>  logElement("Error!", "#ff4a4a", $"Directory at '{outputFolder}' does not exist!")));
+                return;
+            }
+            
+            var i = 0;
+            foreach (var oldPath in inputFiles)
+            {
+                i++;
+                var newFileName = String.Format(stringFormat, i);
+                File.Copy(oldPath, Path.Combine(outputFolder,newFileName));
+                Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
+                    new Action(() => logElement("File Processed", "#00ddff", $"File {newFileName} has been processed.")));
+            }
+
+            var processTime = sw.ElapsedMilliseconds;
+            sw.Stop();
+            
+            Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
+                new Action(() => logElement("INFO", "#fff700", $"Processing time: {processTime}ms")));
+            
+            btnReset.IsEnabled = true;
+
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
+        }
+        
+        /*
+        private void RenameOld()
         {
             string stringFormat = txtOutputName.Text;
             List<Bitmap> outputImages = new List<Bitmap>();
@@ -94,12 +165,12 @@ namespace FileBatchRenamer
             try
             {
                 outputImages = new List<Bitmap>();
-                Dispatcher.Invoke(DispatcherPriority.Background,
+                Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
                   new Action(() =>  logElement("Button clicked", "#00ddff", $"Temporary list created.")));
             }
             catch(Exception ex)
             {
-                Dispatcher.Invoke(DispatcherPriority.Background,
+                Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
                   new Action(() =>  logElement("Error!", "#ff4a4a", $"{ex.Message}\n{ex.StackTrace}")));
                 return;
             }
@@ -111,17 +182,17 @@ namespace FileBatchRenamer
                 try
                 {
                     bmp = new Bitmap(path);
-                    Dispatcher.Invoke(DispatcherPriority.Background,
+                    Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
                     new Action(() =>  logElement("Image found", "#00ddff", $"File in '{path}' was found and loaded.")));
 
                     outputImages.Add(bmp);
-                    Dispatcher.Invoke(DispatcherPriority.Background,
+                    Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
                     new Action(() =>  logElement("Image saved", "#00ddff", $"Image converted and saved to list. Local Image ID: {outputImages.Count}")));
 
                 }
                 catch (Exception ex)
                 {
-                    Dispatcher.Invoke(DispatcherPriority.Background,
+                    Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
                     new Action(() =>  logElement("Error!", "#ff4a4a", $"{ex.Message}\n{ex.StackTrace}")));
                     btnReset.IsEnabled = true;
                     return;
@@ -131,19 +202,19 @@ namespace FileBatchRenamer
             string conversionTime = sw.ElapsedMilliseconds.ToString();
             sw.Stop();
 
-            Dispatcher.Invoke(DispatcherPriority.Background,
+            Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
             new Action(() =>  logElement("Task completed", "#59ff38", $"All images found and saved.")));
-            Dispatcher.Invoke(DispatcherPriority.Background,
+            Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
             new Action(() =>  logElement("Executing task", "#fff700", $"Saving images to output folder...")));
 
             if(!Directory.Exists(outputFolder))
             {
-                Dispatcher.Invoke(DispatcherPriority.Background,
+                Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
                 new Action(() =>  logElement("Error!", "#ff4a4a", $"Directory at '{outputFolder}' does not exist!")));
                 return;
             }
 
-            Dispatcher.Invoke(DispatcherPriority.Background,
+            Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
             new Action(() =>  logElement("Directory found", "#00ddff", $"Directory at '{outputFolder}' found.")));
 
             int i = 0;
@@ -157,12 +228,12 @@ namespace FileBatchRenamer
                 {
                     i++;
                     image.Save(System.IO.Path.Combine(outputFolder, string.Format(stringFormat, i)));
-                    Dispatcher.Invoke(DispatcherPriority.Background,
+                    Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
                     new Action(() =>  logElement("Image saved", "#00ddff", $"Image '{string.Format(stringFormat, i)}' saved in output folder.")));
                 }
                 catch (Exception ex)
                 {
-                    Dispatcher.Invoke(DispatcherPriority.Background,
+                    Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
                     new Action(() =>  logElement("Error!", "#ff4a4a", $"{ex.Message}\n{ex.StackTrace}")));
                     btnReset.IsEnabled = true;
                     return;
@@ -171,11 +242,11 @@ namespace FileBatchRenamer
             string elapsedSaved = sw.ElapsedMilliseconds.ToString();
             sw.Stop();
 
-            Dispatcher.Invoke(DispatcherPriority.Background,
+            Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
             new Action(() => logElement("Task completed", "#59ff38", $"All images found and saved.")));
-            Dispatcher.Invoke(DispatcherPriority.Background,
+            Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
             new Action(() => logElement("INFO", "#fff700", $"Time elapsed converting: {conversionTime}ms")));
-            Dispatcher.Invoke(DispatcherPriority.Background,
+            Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
             new Action(() => logElement("INFO", "#fff700", $"Time elapsed converting: {elapsedSaved}ms")));
 
             MessageBox.Show($"Task completed!\nConversion time: {conversionTime}ms\nSave time {elapsedSaved}ms");
@@ -185,7 +256,8 @@ namespace FileBatchRenamer
             GC.WaitForPendingFinalizers();
             GC.Collect();
         }
-
+        */
+        
         private void btnReset_Click(object sender, RoutedEventArgs e)
         {
             inputFiles = null;
