@@ -22,14 +22,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ddcc5564-fdf5-4322-9da2-0223b93b0dca" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.FileBatchRenamer/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.FileBatchRenamer/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MainWindow.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/MainWindow.xaml.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/Debug/FileBatchRenamer.exe" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/FileBatchRenamer.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/Debug/FileBatchRenamer.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Debug/FileBatchRenamer.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/FileBatchRenamer.exe" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/FileBatchRenamer.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/FileBatchRenamer.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/FileBatchRenamer.pdb" afterDir="false" />
-    </list>
+    <list default="true" id="ddcc5564-fdf5-4322-9da2-0223b93b0dca" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -74,7 +67,7 @@
       <option name="USE_EXTERNAL_CONSOLE" value="0" />
       <option name="USE_MONO" value="0" />
       <option name="RUNTIME_ARGUMENTS" value="" />
-      <option name="PROJECT_PATH" value="$PROJECT_DIR$/FileBatchRenamer.csproj" />
+      <option name="PROJECT_PATH" value="$PROJECT_DIR$/FileBatchRenamerPerformance.csproj" />
       <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
       <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
       <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
@@ -94,7 +87,7 @@
       <option name="presentableId" value="Default" />
       <updated>1613644330892</updated>
       <workItem from="1613644342867" duration="3340000" />
-      <workItem from="1613731132351" duration="3172000" />
+      <workItem from="1613731132351" duration="3531000" />
     </task>
     <task id="LOCAL-00001" summary="major performance improvements with logging enabled">
       <created>1613645623695</created>
@@ -103,7 +96,14 @@
       <option name="project" value="LOCAL" />
       <updated>1613645623695</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="More performance improvements and UX changes">
+      <created>1613734948185</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1613734948185</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -126,25 +126,26 @@
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="major performance improvements with logging enabled" />
-    <option name="LAST_COMMIT_MESSAGE" value="major performance improvements with logging enabled" />
+    <MESSAGE value="More performance improvements and UX changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="More performance improvements and UX changes" />
   </component>
   <component name="WindowStateProjectService">
-    <state width="2517" height="401" key="GridCell.Tab.0.bottom" timestamp="1613734617663">
+    <state width="2517" height="401" key="GridCell.Tab.0.bottom" timestamp="1613734872493">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2517" height="401" key="GridCell.Tab.0.bottom/0.0.2560.1400/2560.-594.1440.2520@0.0.2560.1400" timestamp="1613734617663" />
-    <state width="2517" height="401" key="GridCell.Tab.0.center" timestamp="1613734617663">
+    <state width="2517" height="401" key="GridCell.Tab.0.bottom/0.0.2560.1400/2560.-594.1440.2520@0.0.2560.1400" timestamp="1613734872493" />
+    <state width="2517" height="401" key="GridCell.Tab.0.center" timestamp="1613734872493">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2517" height="401" key="GridCell.Tab.0.center/0.0.2560.1400/2560.-594.1440.2520@0.0.2560.1400" timestamp="1613734617663" />
-    <state width="2517" height="401" key="GridCell.Tab.0.left" timestamp="1613734617663">
+    <state width="2517" height="401" key="GridCell.Tab.0.center/0.0.2560.1400/2560.-594.1440.2520@0.0.2560.1400" timestamp="1613734872493" />
+    <state width="2517" height="401" key="GridCell.Tab.0.left" timestamp="1613734872493">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2517" height="401" key="GridCell.Tab.0.left/0.0.2560.1400/2560.-594.1440.2520@0.0.2560.1400" timestamp="1613734617663" />
-    <state width="2517" height="401" key="GridCell.Tab.0.right" timestamp="1613734617663">
+    <state width="2517" height="401" key="GridCell.Tab.0.left/0.0.2560.1400/2560.-594.1440.2520@0.0.2560.1400" timestamp="1613734872493" />
+    <state width="2517" height="401" key="GridCell.Tab.0.right" timestamp="1613734872493">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2517" height="401" key="GridCell.Tab.0.right/0.0.2560.1400/2560.-594.1440.2520@0.0.2560.1400" timestamp="1613734617663" />
+    <state width="2517" height="401" key="GridCell.Tab.0.right/0.0.2560.1400/2560.-594.1440.2520@0.0.2560.1400" timestamp="1613734872493" />
     <state width="2517" height="519" key="GridCell.Tab.1.bottom" timestamp="1613733405921">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>

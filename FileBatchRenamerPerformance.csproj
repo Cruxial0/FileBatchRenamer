@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{69E54CAB-A3AF-47A8-9802-ACC5010DB30F}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>FileBatchRenamer</RootNamespace>
-    <AssemblyName>FileBatchRenamer</AssemblyName>
+    <RootNamespace>FileBatchRenamerPerformance</RootNamespace>
+    <AssemblyName>FileBatchRenamerPerformance</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -85,7 +85,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ImageExtensions.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

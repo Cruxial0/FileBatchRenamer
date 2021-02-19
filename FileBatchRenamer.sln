@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30523.141
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileBatchRenamer", "FileBatchRenamer.csproj", "{69E54CAB-A3AF-47A8-9802-ACC5010DB30F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileBatchRenamerPerformance", "FileBatchRenamerPerformance.csproj", "{69E54CAB-A3AF-47A8-9802-ACC5010DB30F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

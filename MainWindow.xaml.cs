@@ -15,7 +15,7 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 using RichTextBox = System.Windows.Controls.RichTextBox;
 
-namespace FileBatchRenamer
+namespace FileBatchRenamerPerformance
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -91,31 +91,6 @@ namespace FileBatchRenamer
                 }
             }
         }
-
-        private void SelOutFolder_Old()
-        {
-            System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
-
-            Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
-                new Action(() =>  logElement("Button clicked", "#fff700", $"'Select output folder' was clicked.")));
-
-            if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK && fbd.SelectedPath != null)
-            {
-                outputFolder = fbd.SelectedPath;
-                btnOutputFolder.IsEnabled = false;
-
-                Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
-                    new Action(() =>  logElement("Update", "#eb85ff", $"Output directory set to: '{fbd.SelectedPath}'")));
-
-                if (btnFindFiles.IsEnabled == false && btnOutputFolder.IsEnabled == false) btnConvert.IsEnabled = true;
-                return;
-            }
-            else
-            {
-                Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
-                    new Action(() =>  logElement("Error!", "#ff4a4a", $"Something went wrong when setting the output folder...")));
-            }
-        }
         
         
         private void btnConvert_Click(object sender, RoutedEventArgs e)
@@ -125,7 +100,7 @@ namespace FileBatchRenamer
                 new Action(() => logElement("Button clicked", "#00ddff", "Conversion started")));
             sw.Start();
             inputFiles.Sort();
-            //inputFiles.Reverse();
+            //inputFiles.Reverse();+
             
             if(!Directory.Exists(outputFolder))
             {
@@ -155,108 +130,6 @@ namespace FileBatchRenamer
             GC.WaitForPendingFinalizers();
             GC.Collect();
         }
-        
-        /*
-        private void RenameOld()
-        {
-            string stringFormat = txtOutputName.Text;
-            List<Bitmap> outputImages = new List<Bitmap>();
-
-            try
-            {
-                outputImages = new List<Bitmap>();
-                Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
-                  new Action(() =>  logElement("Button clicked", "#00ddff", $"Temporary list created.")));
-            }
-            catch(Exception ex)
-            {
-                Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
-                  new Action(() =>  logElement("Error!", "#ff4a4a", $"{ex.Message}\n{ex.StackTrace}")));
-                return;
-            }
-
-            sw.Start();
-            foreach (var path in inputFiles)
-            {
-                Bitmap bmp;
-                try
-                {
-                    bmp = new Bitmap(path);
-                    Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
-                    new Action(() =>  logElement("Image found", "#00ddff", $"File in '{path}' was found and loaded.")));
-
-                    outputImages.Add(bmp);
-                    Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
-                    new Action(() =>  logElement("Image saved", "#00ddff", $"Image converted and saved to list. Local Image ID: {outputImages.Count}")));
-
-                }
-                catch (Exception ex)
-                {
-                    Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
-                    new Action(() =>  logElement("Error!", "#ff4a4a", $"{ex.Message}\n{ex.StackTrace}")));
-                    btnReset.IsEnabled = true;
-                    return;
-                } 
-            }
-
-            string conversionTime = sw.ElapsedMilliseconds.ToString();
-            sw.Stop();
-
-            Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
-            new Action(() =>  logElement("Task completed", "#59ff38", $"All images found and saved.")));
-            Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
-            new Action(() =>  logElement("Executing task", "#fff700", $"Saving images to output folder...")));
-
-            if(!Directory.Exists(outputFolder))
-            {
-                Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
-                new Action(() =>  logElement("Error!", "#ff4a4a", $"Directory at '{outputFolder}' does not exist!")));
-                return;
-            }
-
-            Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
-            new Action(() =>  logElement("Directory found", "#00ddff", $"Directory at '{outputFolder}' found.")));
-
-            int i = 0;
-
-            sw.Reset();
-            sw.Start();
-
-            foreach (var image in outputImages)
-            {
-                try
-                {
-                    i++;
-                    image.Save(System.IO.Path.Combine(outputFolder, string.Format(stringFormat, i)));
-                    Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
-                    new Action(() =>  logElement("Image saved", "#00ddff", $"Image '{string.Format(stringFormat, i)}' saved in output folder.")));
-                }
-                catch (Exception ex)
-                {
-                    Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
-                    new Action(() =>  logElement("Error!", "#ff4a4a", $"{ex.Message}\n{ex.StackTrace}")));
-                    btnReset.IsEnabled = true;
-                    return;
-                }
-            }
-            string elapsedSaved = sw.ElapsedMilliseconds.ToString();
-            sw.Stop();
-
-            Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
-            new Action(() => logElement("Task completed", "#59ff38", $"All images found and saved.")));
-            Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
-            new Action(() => logElement("INFO", "#fff700", $"Time elapsed converting: {conversionTime}ms")));
-            Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
-            new Action(() => logElement("INFO", "#fff700", $"Time elapsed converting: {elapsedSaved}ms")));
-
-            MessageBox.Show($"Task completed!\nConversion time: {conversionTime}ms\nSave time {elapsedSaved}ms");
-
-            btnReset.IsEnabled = true;
-
-            GC.WaitForPendingFinalizers();
-            GC.Collect();
-        }
-        */
         
         private void btnReset_Click(object sender, RoutedEventArgs e)
         {

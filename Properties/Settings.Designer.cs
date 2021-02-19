@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace FileBatchRenamer.Properties
+namespace FileBatchRenamerPerformance.Properties
 {
 
 
