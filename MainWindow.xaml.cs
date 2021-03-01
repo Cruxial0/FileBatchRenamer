@@ -33,8 +33,13 @@ namespace FileBatchRenamerPerformance
         {
             InitializeComponent();
 
-            Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
-            new Action(() =>  logElement("INFO", "#fff700", $"Disabling logging can vastly improve performance results! (Enabled by default)")));
+            if(enableLogging)Dispatcher.InvokeAsync(
+                () =>  logElement(
+                    "INFO", 
+                    "#fff700", 
+                    $"Disabling logging can vastly improve performance results! (Enabled by default)"
+                    )
+                );
         }
 
         private void btnFindFiles_Click(object sender, RoutedEventArgs e)
@@ -42,32 +47,50 @@ namespace FileBatchRenamerPerformance
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Multiselect = true;
 
-            Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
-                  new Action(() =>  logElement("Button clicked", "#fff700", $"'Select output folder' was clicked.")));
+            if(enableLogging)Dispatcher.InvokeAsync(
+                () =>  logElement(
+                    "Button clicked", 
+                    "#fff700", 
+                    $"'Select output folder' was clicked."
+                    )
+                );
 
             if (ofd.ShowDialog() == true && ofd.FileNames.Length > 1)
             {
                 inputFiles = ofd.FileNames.ToList();
                 btnFindFiles.IsEnabled = false;
 
-                Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
-                  new Action(() =>  logElement("Update", "#eb85ff", $"{ofd.FileNames.Length} files found.")));
+                if(enableLogging)Dispatcher.InvokeAsync(
+                  () =>  logElement(
+                      "Update", 
+                      "#eb85ff", 
+                      $"{ofd.FileNames.Length} files found."
+                      )
+                  );
                 
-
                 if (btnFindFiles.IsEnabled == false && btnOutputFolder.IsEnabled == false) btnConvert.IsEnabled = true;
-                return;
             }
             else
             {
-                Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
-                  new Action(() =>  logElement("Notice", "#ffa412", $"Please select 1 or more picture(s).")));
+                if(enableLogging)Dispatcher.InvokeAsync(
+                    () =>  logElement(
+                        "Notice", 
+                        "#ffa412", 
+                        $"Please select 1 or more picture(s)."
+                        )
+                    );
             }
         }
 
         private void btnOutputFolder_Click(object sender, RoutedEventArgs e)
         {
-            Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
-                new Action(() =>  logElement("Button clicked", "#fff700", $"'Select output folder' was clicked.")));
+            if(enableLogging)Dispatcher.InvokeAsync(
+                () =>  logElement(
+                    "Button clicked", 
+                    "#fff700", 
+                    $"'Select output folder' was clicked."
+                    )
+                );
             
             using(var fbd = new CommonOpenFileDialog())
             {
@@ -80,14 +103,24 @@ namespace FileBatchRenamerPerformance
                     outputFolder = fbd.FileName;
                     btnOutputFolder.IsEnabled = false;
                     
-                    Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
-                        new Action(() =>  logElement("Update", "#eb85ff", $"Output directory set to: '{fbd.FileName}'")));
+                    if(enableLogging)Dispatcher.InvokeAsync(
+                        () =>  logElement(
+                            "Update", 
+                            "#eb85ff", 
+                            $"Output directory set to: '{fbd.FileName}'"
+                            )
+                        );
                     if (btnFindFiles.IsEnabled == false && btnOutputFolder.IsEnabled == false) btnConvert.IsEnabled = true;
                 }
                 else
                 {
-                    Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
-                        new Action(() =>  logElement("Error!", "#ff4a4a", $"Something went wrong when setting the output folder...")));
+                    if(enableLogging)Dispatcher.InvokeAsync(
+                        () =>  logElement(
+                            "Error!", 
+                            "#ff4a4a", 
+                            $"Something went wrong when setting the output folder..."
+                            )
+                        );
                 }
             }
         }
@@ -96,16 +129,26 @@ namespace FileBatchRenamerPerformance
         private void btnConvert_Click(object sender, RoutedEventArgs e)
         {
             string stringFormat = txtOutputName.Text;
-            Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
-                new Action(() => logElement("Button clicked", "#00ddff", "Conversion started")));
+            if(enableLogging)Dispatcher.InvokeAsync(
+                () => logElement(
+                    "Button clicked", 
+                    "#00ddff", 
+                    "Conversion started"
+                    )
+                );
             sw.Start();
             inputFiles.Sort();
-            //inputFiles.Reverse();+
+            //inputFiles.Reverse();
             
             if(!Directory.Exists(outputFolder))
             {
-                Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
-                    new Action(() =>  logElement("Error!", "#ff4a4a", $"Directory at '{outputFolder}' does not exist!")));
+                if(enableLogging)Dispatcher.InvokeAsync(
+                    () =>  logElement(
+                        "Error!", 
+                        "#ff4a4a", 
+                        $"Directory at '{outputFolder}' does not exist!"
+                        )
+                    );
                 return;
             }
             
@@ -115,15 +158,25 @@ namespace FileBatchRenamerPerformance
                 i++;
                 var newFileName = String.Format(stringFormat, i);
                 File.Copy(oldPath, Path.Combine(outputFolder,newFileName));
-                Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
-                    new Action(() => logElement("File Processed", "#00ddff", $"File {newFileName} has been processed.")));
+                if(enableLogging)Dispatcher.InvokeAsync(
+                    () => logElement(
+                        "File Processed", 
+                        "#00ddff", 
+                        $"File {newFileName} has been processed."
+                        )
+                    );
             }
 
             var processTime = sw.ElapsedMilliseconds;
             sw.Stop();
             
-            Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,
-                new Action(() => logElement("INFO", "#fff700", $"Processing time: {processTime}ms")));
+            Dispatcher.InvokeAsync(
+                () => logElement(
+                    "INFO", 
+                    "#fff700", 
+                    $"Processing time: {processTime}ms"
+                    )
+                );
             
             btnReset.IsEnabled = true;
 
@@ -167,10 +220,8 @@ namespace FileBatchRenamerPerformance
             AutoScroll = false;
         }
 
-        private async Task logElement(string header, string headerColorHex, string content)
+        private void logElement(string header, string headerColorHex, string content)
         {
-            if (!enableLogging) return;
-
             RichTextBox richTextBox = new RichTextBox();
             richTextBox.Background = null;
             richTextBox.BorderBrush = null;
